@@ -2,26 +2,39 @@
   <h1>Reaction Timer</h1> 
   <button @click="start" :disabled="isPlaying">Play</button> 
   
-  <block v-if="this.isPlaying" :delay="delay"/>
+  <block v-if="this.isPlaying" :delay="delay" @end="endGame"/>
+
+  <results v-if="this.showResults" :score="score"/>
 </template>
 
 <script>
 
 import block from './components/block.vue'
+import results from './components/results.vue'
 
 export default {
   name: 'App',
-  components: { block },
+  components: { block , results},
   data() {
     return {
       isPlaying: false,
-      delay: null
+      delay: null,
+      score: null,
+      showResults: false
     }
   },
   methods: {
     start() {
       this.delay = 2000 + Math.random() * 5000
       this.isPlaying = true
+      this.showResults = false
+
+    },
+
+    endGame(reactionTime) {
+        this.score = reactionTime
+        this.isPlaying = false
+        this.showResults = true
     }
   }
 }
@@ -35,5 +48,22 @@ export default {
   text-align: center;
   color: #444;
   margin-top: 60px;
+}
+
+button{
+  background: #0faf87;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+button[disabled] {
+  opacity: 0.2;
+  cursor: not-allowed;
 }
 </style>
